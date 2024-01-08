@@ -1,0 +1,339 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Kis Bahcesi Fiyat Teiklif Modulu</title>
+    <link rel="icon" type="image/png" href="~/images/icon.png" />
+    <meta name="description" content="Kis Bahcesi Hesaplama Modulu" />
+
+    <meta name="author" content="Mehmet KARAHUYUK" />
+    <meta name="Abstract" content="Mehmet KARAHUYUK">
+    <meta name="Copyright" content="Mehmet KARAHÜYÜK ">
+    <meta name="robots" content="index, follow" />
+    <meta property="og:locale" content="tr" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Kis Bahcesi Hesaplama Modulu" />
+    <meta property="og:description" content="Kis Bahcesi Hesaplama Modulu" />
+    <meta property="og:site_name" content="Kis Bahcesi Hesaplama Modulu" />
+    <meta property="og:url" content="#" />
+    <meta property="og:image" content="~/images/icon.png" />
+    <meta name="twitter:image" content="~/images/icon.png" />
+    <meta name="twitter:card" content="summary" />
+    <link rel="canonical" href="#" />
+
+
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    
+    <style>
+        #btn-back-to-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: none;
+        }
+      
+    </style>
+
+</head>
+<body>
+    <main role="main">
+
+        <!-- Main jumbotron for a primary marketing message or call to action -->
+        <div style="background: url(../images/bg-1.jpg)" class="jumbotron bg-cover text-white">
+            <div class="container py-5 text-center">
+                <h1 class="display-4 font-weight-bold">Kis Bahcesi Teklif Modulu</h1>
+                <p class="font-italic mb-0">Evinizin Olculerine gore istediginiz seceneklerde Kis Bahcesi icin fiyat teklifi alabilirsiniz</p>
+
+            </div>
+        </div>
+
+        <div class="container">
+            <div id="Model_Listesi" class="text-center">
+                @foreach (var item in ViewBag.Model_List)
+                {
+                    <button class="btn btn-primary btn-lg m-5" onclick="Model_ata('@item.MODEL_ID','@item.MODEL_NAME')" style="height:150px;width:150px"><i class="fa-solid fa-shop fa-2x"></i><br />@item.MODEL_NAME</button>
+                }
+
+            </div>
+            <div id="Servis_Listesi" class="text-center" hidden>
+
+                @foreach (var item in ViewBag.Servis_Listesi)
+                {
+                    <button class="btn btn-danger btn-lg m-5" onclick="Servis_ata('@item.SERVIS_ID','@item.SERVIS_NAME')" style="height:150px;width:150px"><i class="fa-solid @item.SERVIS_ICON fa-2x"></i><br />@item.SERVIS_NAME</button>
+
+                }
+            </div>
+            <div id="Ayak_Sec" class="text-center" hidden>
+                <button class="btn btn-warning btn-lg m-5" onclick="Ayak_ata(2,'Duvara Monte')" style="height:150px;width:150px"><i class="fa-solid fa-circle-info fa-2x"></i><br />Duvara Monte</button>
+                <button class="btn btn-warning btn-lg m-5" onclick="Ayak_ata(4,'Bahce Ortasonda')" style="height:150px;width:150px"><i class="fa-solid fa-circle-info fa-2x"></i><br />Bahce Ortasonda</button>
+            </div>
+            <div class="row">
+                <div class="col-md-4 ">
+
+                    <div id="toplam" class="card mt-5 sticky-top shadow-sm" hidden>
+                        <div class="card-header">
+                            Toplam
+                        </div>
+                        <div class="card-body">
+                            <ul id="Top_detay" class="list-group list-group-flush"></ul>
+
+                            <h6 id="karsilama_secenegi" class="card-subtitle mb-2 text-muted"></h6>
+
+                            <h5 id="veri2" class="label label-default fw-bold"></h5>
+                            <a href="#" class="card-link" onclick="window.location.reload(true);">Yeniden Fiyatlandir</a>
+                        </div>
+
+
+                    </div>
+                </div>
+                <div class="col-md-8">
+
+
+                    <div id="sec1" class="mt-5" hidden>
+                        <h6>Tavan Secenegi</h6>
+                        <hr />
+                        <select id="Tavan_Listesi" class="form-control">
+                            <option value=0>Bir Öğe Seçin</option>
+                        </select>
+                        <img id="image1" class="img-fluid mt-3" />
+                        <button id="liste_btn" onclick="degistir_btn(1)" class="btn btn-secondary" style="margin:10px 10px 0px 0px">Degistir</button>
+                    </div>
+                    <div id="sec2" class="mt-5" hidden>
+
+                        <h6>Olculeri Belirleme</h6>
+                        <hr />
+
+                        <div id="olculer" class="row">
+
+                            <div class="col-lg-4">
+                                <input id="genislik" type="number" class="form-control" placeholder="Genislik (cm)">
+                                <p id="max_genislik" style="font-style:italic"></p>
+                            </div>
+                            <div class="col-lg-4">
+                                <input id="yukseklik" type="number" class="form-control" placeholder="Yukseklik (cm)">
+                                <p id="max_yukseklik" style="font-style:italic"></p>
+                            </div>
+                            <div class="col-lg-4">
+                                <input id="derinlik" type="number" class="form-control" placeholder="Derinlik (cm)">
+                                <p id="max_derinlik" style="font-style:italic"></p>
+                            </div>
+
+                        </div>
+                        <img id="image2" src="~/Images/berdachung-3.jpg" class="img-fluid mt-3" />
+                        <button id="liste2_btn" onclick="degistir_btn(2)" class="btn btn-secondary" style="margin:10px 10px 0px 0px;" hidden>Degistir</button>
+                        <button id="btn_kaydet" onclick="en_boy_kaydet()" class="btn btn-primary" style="margin:10px 10px 0px 0px; ">Kaydet</button>
+
+                    </div>
+                    <div id="sec3" class="mt-5" hidden>
+
+                        <h6>Renk Secimi</h6>
+                        <hr />
+                        <select id="Renkler" class="form-control">
+                            <option value=0>Bir Öğe Seçin</option>
+                        </select>
+                        <img id="image3" class="img-fluid mt-3" />
+                        <button id="liste3_btn" onclick="degistir_btn(3)" class="btn btn-secondary" style="margin:10px 10px 0px 0px; ">Degistir</button>
+                    </div>
+                    <div id="sec4" class="mt-5" hidden>
+
+                        <h6>Led Secimi</h6>
+                        <hr />
+                        <select id="Led_secimi" class="form-control">
+                            <option value=0>Bir Öğe Seçin</option>
+                            <option value=1>Led Ayninlatma Olmasin</option>
+                            <option value=2>Led Aydinlatma Olsun</option>
+                        </select>
+                        <img id="image4" class="img-fluid mt-3" />
+                        <button id="liste4_btn" onclick="degistir_btn(4)" class="btn btn-secondary" style="margin:10px 10px 0px 0px; ">Degistir</button>
+                    </div>
+                    <div id="sec5" class="mt-5" hidden>
+
+                        <h6>Sag Yan Secimi</h6>
+                        <hr />
+                        <select id="sag_yan_secimi" class="form-control">
+                            <option value=0>Bir Öğe Seçin</option>
+                        </select>
+                        <img id="image5" class="img-fluid mt-3" />
+                        <button id="liste4_btn" onclick="degistir_btn(5)" class="btn btn-secondary" style="margin:10px 10px 0px 0px; ">Degistir</button>
+                    </div>
+                    <div id="sec6" class="mt-5" hidden>
+
+                        <h6>Sol Yan Secimi</h6>
+                        <hr />
+                        <select id="sol_yan_secimi" class="form-control">
+                            <option value=0>Bir Öğe Seçin</option>
+                        </select>
+                        <img id="image6" class="img-fluid mt-3" />
+                        <button id="liste4_btn" onclick="degistir_btn(6)" class="btn btn-secondary" style="margin:10px 10px 0px 0px; ">Degistir</button>
+                    </div>
+                    <div id="sec7" class="mt-5" hidden>
+
+                        <h6>On Kapatma Secimi</h6>
+                        <hr />
+                        <select id="on_secimi" class="form-control">
+                            <option value=0>Bir Öğe Seçin</option>
+                        </select>
+                        <img id="image7" class="img-fluid mt-3" />
+                        <button id="liste4_btn" onclick="degistir_btn(7)" class="btn btn-secondary" style="margin:10px 10px 0px 0px; ">Degistir</button>
+                    </div>
+                    <div id="sec8" class="mt-5" hidden>
+
+                        <h6>Arka Kapatma Secimi</h6>
+                        <hr />
+                        <select id="arka_secimi" class="form-control">
+                            <option value=0>Bir Öğe Seçin</option>
+                        </select>
+                        <img id="image8" class="img-fluid mt-3" />
+                        <button id="liste4_btn" onclick="degistir_btn(8)" class="btn btn-secondary" style="margin:10px 10px 0px 0px; ">Degistir</button>
+                    </div>
+
+                </div>
+
+            </div>
+            <!-- Example row of columns -->
+
+
+
+
+
+        </div> <!-- /container -->
+       
+    </main>
+
+    <!-- Footer -->
+    <footer class="text-center text-lg-start bg-white text-muted">
+        <!-- Section: Social media -->
+        <section class="d-flex justify-content-center justify-content-lg-between p-4 border-bottom">
+            <!-- Left -->
+            <div class="me-5 d-none d-lg-block">
+                @*<span>Get connected with us on social networks:</span>*@
+            </div>
+            <!-- Left -->
+            <!-- Right -->
+            <div>
+                <a href="" class="me-4 link-secondary">
+                    <i class="fab fa-facebook-f"></i>
+                </a>
+                <a href="" class="me-4 link-secondary">
+                    <i class="fab fa-twitter"></i>
+                </a>
+                <a href="" class="me-4 link-secondary">
+                    <i class="fab fa-google"></i>
+                </a>
+                <a href="" class="me-4 link-secondary">
+                    <i class="fab fa-instagram"></i>
+                </a>
+                <a href="" class="me-4 link-secondary">
+                    <i class="fab fa-linkedin"></i>
+                </a>
+                <a href="" class="me-4 link-secondary">
+                    <i class="fab fa-github"></i>
+                </a>
+            </div>
+            <!-- Right -->
+        </section>
+        <!-- Section: Social media -->
+        <!-- Section: Links  -->
+        <section class="">
+            <div class="container text-center text-md-start mt-5">
+                <!-- Grid row -->
+                <div class="row mt-3">
+                    <!-- Grid column -->
+                    <div class="col-md-3 col-lg-4 col-xl-3 mx-auto mb-4">
+                        <!-- Content -->
+                        <h6 class="text-uppercase fw-bold mb-4">
+                            <i class="fas fa-gem me-3 text-secondary"></i> Company name
+                        </h6>
+                        <p>
+                            Here you can use rows and columns to organize your footer content. Lorem ipsum
+                            dolor sit amet, consectetur adipisicing elit.
+                        </p>
+                    </div>
+                    <!-- Grid column -->
+                    <!-- Grid column -->
+                    <div class="col-md-2 col-lg-2 col-xl-2 mx-auto mb-4">
+                        <!-- Links -->
+                        <h6 class="text-uppercase fw-bold mb-4">
+                            Products
+                        </h6>
+                        <p>
+                            <a href="#!" class="text-reset">Angular</a>
+                        </p>
+                        <p>
+                            <a href="#!" class="text-reset">React</a>
+                        </p>
+                        <p>
+                            <a href="#!" class="text-reset">Vue</a>
+                        </p>
+                        <p>
+                            <a href="#!" class="text-reset">Laravel</a>
+                        </p>
+                    </div>
+                    <!-- Grid column -->
+                    <!-- Grid column -->
+                    <div class="col-md-3 col-lg-2 col-xl-2 mx-auto mb-4">
+                        <!-- Links -->
+                        <h6 class="text-uppercase fw-bold mb-4">
+                            Useful links
+                        </h6>
+                        <p>
+                            <a href="#!" class="text-reset">Pricing</a>
+                        </p>
+                        <p>
+                            <a href="#!" class="text-reset">Settings</a>
+                        </p>
+                        <p>
+                            <a href="#!" class="text-reset">Orders</a>
+                        </p>
+                        <p>
+                            <a href="#!" class="text-reset">Help</a>
+                        </p>
+                    </div>
+                    <!-- Grid column -->
+                    <!-- Grid column -->
+                    <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mb-md-0 mb-4">
+                        <!-- Links -->
+                        <h6 class="text-uppercase fw-bold mb-4">Contact</h6>
+                        <p><i class="fas fa-home me-3 text-secondary"></i> New York, NY 10012, US</p>
+                        <p>
+                            <i class="fas fa-envelope me-3 text-secondary"></i>
+                            info@example.com
+                        </p>
+                        <p><i class="fas fa-phone me-3 text-secondary"></i> + 01 234 567 88</p>
+                        <p><i class="fas fa-print me-3 text-secondary"></i> + 01 234 567 89</p>
+                    </div>
+                    <!-- Grid column -->
+                </div>
+                <!-- Grid row -->
+            </div>
+        </section>
+        <!-- Section: Links  -->
+        <!-- Copyright -->
+        <div class="text-center p-4" style="background-color: rgba(0, 0, 0, 0.025);">
+            © 2023 Copyright:
+            <a class="text-reset fw-bold" href="#">Mehmet KARAHUYUK</a>
+        </div>
+        <!-- Copyright -->
+    </footer>
+    <!-- Footer -->
+
+    <button type="button"
+            class="btn btn-danger btn-floating btn-lg"
+            id="btn-back-to-top">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <script src="~/Js/Btn_Top.js"></script>
+    <script src="~/Js/Hesap.js"></script>
+
+</body>
+</html>
